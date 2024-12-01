@@ -1,0 +1,96 @@
+{% include "head.html" %}
+<div class="container-fluid">
+    <div><br></div>
+    <div class="row" style="background-color: white">
+        <div class="col-1"></div>
+        <div class="col-10">
+            <h2 class="text-center text-warn">Staff Home Page</h2>
+        </div>
+        <div class="col-1">
+            <div class="text-end"><a href="/staff-logout">log out</a></div>
+        </div>
+    </div>
+    <div><br></div>
+    <div class="row">
+        <div class="col-6 text-center">
+            <div class="" id="addBookForm">
+                <div class="card card-body text-start">
+                    <h3 class="text-center">Add Book Form</h3>
+                    <form action="/add-book" method="POST">
+                        <div>
+                            <label class=" mt-3" for="title">Title</label>
+                            <input id="title" type="text" class="form-control" placeholder="Enter book title here" name="title"
+                                   required>
+                        </div>
+                        <div>
+                            <label class=" mt-3" for="author">Author</label>
+                            <input id="author" type="text" class="form-control" placeholder="Enter book author name here" name="author"
+                                   required>
+                        </div>
+                        <div>
+                            <label class=" mt-3" for="genre">Genre</label>
+                            <select class="form-control" id="genre" name="genre">
+                                <option value="">Select the genre</option>
+                                <option value="Comedy">Comedy</option>
+                                <option value="Sci-Fi">Sci-Fi</option>
+                                <option value="Educational">Educational</option>
+                                <option value="Romantic">Romantic</option>
+                                <option value="Thriller">Thriller</option>
+                                <option value="Detective">Detective</option>
+                                <option value="Self-Help">Self-Help</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class=" mt-3" for="publication-date">Publication Date</label>
+                            <input id="publication-date" type="text" class="form-control" placeholder="Enter publication date in mm/DD/YYYY format here" name="publication-date"
+                                   required>
+                        </div>
+                        <div>
+                            <label class=" mt-3" for="count">Count</label>
+                            <input id="count" type="text" class="form-control"
+                                   placeholder="Enter the count of copies available" name="count"
+                                   required>
+                        </div>
+                        <div>
+                            <label class=" mt-3" for="media-type">Media Type</label>
+                            <select class="form-control" id="media-type" name="media-type">
+                                <option value="">Select the media type</option>
+                                <option value="CD/DVD">CD/DVD</option>
+                                <option value="E-Book">E-Book</option>
+                                <option value="Book">Book</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <div><br></div>
+                            <button type="submit" class="btn btn-success">Add</button>
+                        </div>
+                        {% if isBookAdded %}
+                            <div class="text-success">
+                                Book added successfully. Book id is {{ book_id }}
+                            </div>
+                        {% endif %}
+                        {% if isBookNotAdded %}
+                            <div class="text-danger">
+                                Book not added due to some error. Please try again
+                            </div>
+                        {% endif %}
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-3">
+        </div>
+        <div class="col-3">
+        </div>
+    </div>
+</div>
+<style>
+    body {
+        background-image: url("../static/images/staff-home-1.jpg");
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-size: cover;
+    }
+</style>

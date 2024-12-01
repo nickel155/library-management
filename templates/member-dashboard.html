@@ -1,0 +1,173 @@
+{% include "head.html" %}
+<div class="container-fluid">
+    <div><br></div>
+    <div class="row" style="background-color: white">
+        <div class="col-1"></div>
+        <div class="col-10">
+            <h2 class="text-center text-warn">Member Home Page</h2>
+        </div>
+        <div class="col-1">
+            <div class="text-end"><a href="/member-logout">log out</a></div>
+        </div>
+    </div>
+    <div><br></div>
+    <div class="row">
+        <div class="card col-9">
+            <div class="card-header">
+                <span id="error-message" style="color: red;"></span>
+                {% if is_book_reserved %}
+                    <span style="color: green;">Book Reserved successfully</span>
+                {% endif %}
+                {% if not is_book_available %}
+                    <span style="color: red;">Book is not available for given dates!!.
+                        The latest date available is {{ latest_available_date }}</span>
+                {% endif %}
+                <h3>Books</h3>
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th scope="col">Book Id</th>
+                        <th scope="col">Title</th>
+                        <th scope="col">Author</th>
+                        <th scope="col">Genre</th>
+                        <th scope="col">Publication Date</th>
+                        <th scope="col">Count</th>
+                        <th scope="col">Media Type</th>
+                        <td>
+                            <div>
+                                <label class="mt-2 " for="from-date">From Date</label>
+                            </div>
+                        </td>
+                        <td>
+                            <div>
+                                <label class="mt-2" for="to-date">To Date</label>
+                            </div>
+                        </td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for book in books %}
+                        <tr>
+                            <th scope="row">{{ book.book_id }}</th>
+                            <td>{{ book.title }}</td>
+                            <td>{{ book.author }}</td>
+                            <td>{{ book.genre }}</td>
+                            <td>{{ book.publication_date }}</td>
+                            <td>{{ book.count }}</td>
+                            <td>{{ book.mediatype }}</td>
+                            <form action="/reserve-book" method="POST">
+                                <td>
+                                    <div>
+                                        <input class="form-control" type="date" name="from-date" id="from-date"
+                                               placeholder="Enter Checkin date & time" required
+                                               oninput="validateDates()">
+                                    </div>
+                                </td>
+                                <td>
+                                    <div>
+                                        <input class="form-control" type="date" name="to-date" id="to-date"
+                                               placeholder="Enter Checkout date & time" required
+                                               oninput="validateDates()">
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="row">
+                                        <div class="col-9">
+
+                                            <input class="d-none" name="book-id"
+                                                   value="{{ book.book_id }}">
+                                            <input class="d-none" name="member-id"
+                                                   value="{{ member.member_id }}">
+                                            <button type="submit" id="reserve-button" class="btn btn-success ">Reserve
+                                                book
+                                            </button>
+                                        </div>
+                                    </div>
+                                </td>
+                            </form>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="card col-3">
+            <div class="card-header">
+                <span id="error-message" style="color: red;"></span>
+                {% if is_book_reserved %}
+                    <span style="color: green;">Book Reserved successfully</span>
+                {% endif %}
+                {% if not is_book_available %}
+                    <span style="color: red;">Book is not available for given dates!!.
+                        The latest date available is {{ latest_available_date }}</span>
+                {% endif %}
+                <h3>My Reservations</h3>
+                {% for my_reservation in my_reservations %}
+                    <table class="table" style="border: 2px solid black; border-collapse: collapse;">
+                        <thead>
+                        <tr>
+                            <th scope="col">Reservation Id:</th>
+                            <td>{{ my_reservation.reservation_id }}</td>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <th scope="col">Book Id:</th>
+                            <td>{{ my_reservation.book_id }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="col">Reservation Date:</th>
+                            <td>{{ my_reservation.reservation_date }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="col">Start Date :</th>
+                            <td>{{ my_reservation.reservation_start_dare }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="col">End Date :</th>
+                            <td>{{ my_reservation.reservation_end_dare }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="col">Status :</th>
+                            <td>{{ my_reservation.reservation_status }}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+    body {
+        background-image: url("../static/images/staff-home-1.jpg");
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-size: cover;
+    }
+</style>
+<script>
+    function validateDates() {
+        const fromDate = document.getElementById("from-date").value;
+        const toDate = document.getElementById("to-date").value;
+        const errorMsg = document.getElementById("error-message");
+        const reserveButton = document.getElementById("reserve-button");
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        const fromDateObj = fromDate ? new Date(fromDate) : null;
+        const toDateObj = toDate ? new Date(toDate) : null;
+
+        if (fromDateObj && fromDateObj <= today) {
+            errorMsg.textContent = "The 'From Date' must be after today.";
+            reserveButton.disabled = true;
+        } else if (toDate && fromDate && toDateObj < fromDateObj) {
+            errorMsg.textContent = "The 'To Date' cannot be earlier than the 'From Date'.";
+            reserveButton.disabled = true; // Disable the button
+        } else {
+            errorMsg.textContent = "";
+            reserveButton.disabled = false; // Enable the button
+        }
+    }
+</script>
